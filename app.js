@@ -8,6 +8,7 @@ let guessedNames = []; // To track guesses
 fetch('vc_names.csv')
     .then(response => response.text())
     .then(data => {
+        console.log('CSV Data:', data); // Log raw CSV data
         parseCSV(data);
         pickRandomVC();
     })
@@ -17,29 +18,39 @@ fetch('vc_names.csv')
 
 // Parse CSV data into a list of objects
 function parseCSV(data) {
-    const lines = data.split('\n');
+    const lines = data.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+    // Log number of lines processed
+    console.log(`Processing ${lines.length} lines`);
+
     lines.forEach((line, index) => {
-        // Trim whitespace from the line
-        line = line.trim();
-        // Skip empty lines
-        if (line) {
-            // Split by comma
-            const parts = line.split(',');
-            // Ensure there are exactly two parts
-            if (parts.length === 2) {
-                const name = parts[0].trim();
-                const isReal = parts[1].trim();
-                // Check if name and isReal are valid
-                if (name && (isReal === 'True' || isReal === 'False')) {
-                    vcNames.push({ name: name, isReal: isReal === 'True' });
-                } else {
-                    console.warn(`Skipping invalid line: ${line}`);
-                }
+        // Split by comma
+        const parts = line.split(',');
+
+        // Log each line for debugging
+        console.log(`Processing line ${index + 1}: ${line}`);
+        
+        // Ensure there are exactly two parts
+        if (parts.length === 2) {
+            const name = parts[0]?.trim(); // Use optional chaining to prevent errors
+            const isReal = parts[1]?.trim(); // Use optional chaining to prevent errors
+
+            // Log name and isReal for debugging
+            console.log(`Parsed name: ${name}, isReal: ${isReal}`);
+
+            // Check if name and isReal are valid
+            if (name && (isReal === 'True' || isReal === 'False')) {
+                vcNames.push({ name: name, isReal: isReal === 'True' });
             } else {
-                console.warn(`Skipping malformed line: ${line}`);
+                console.warn(`Skipping invalid line: ${line}`);
             }
+        } else {
+            console.warn(`Skipping malformed line: ${line}`);
         }
     });
+
+    // Log the length of vcNames to confirm data loaded
+    console.log(`Loaded ${vcNames.length} VC names`);
 }
 
 // Pick a random VC name from the dataset

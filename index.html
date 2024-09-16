@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess if Those Are Real or Fake VC Names</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Retro Font -->
+    <style>
+        /* Basic styles with a retro look */
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #1a1a1a;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0; /* Reduced padding */
+            font-size: 20px; /* Smaller font size */
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            font-size: 14px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.5);
+        }
+
+        .main-content {
+            margin-top: 70px; /* Space for header */
+            margin-bottom: 60px; /* Space for footer */
+            padding: 20px; /* Added padding for better spacing */
+        }
+
+        .name-box {
+            font-size: 24px;
+            margin: 40px auto; /* Increased margin */
+            color: #00ff99;
+            padding: 20px;
+            border: 2px solid #00ff99;
+            border-radius: 5px;
+            background-color: #333;
+            max-width: 90%; /* Responsive width */
+            box-sizing: border-box;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #ff0066;
+            color: #fff;
+            border: none;
+            outline: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #ff6699;
+        }
+
+        #score {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .guesses {
+            font-size: 16px;
+            margin-top: 20px;
+            text-align: left;
+            display: inline-block;
+            max-width: 90%;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .guesses .guess {
+            margin-bottom: 10px;
+            font-size: 16px; /* Consistent font size */
+        }
+
+        .guesses .guess span {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .guesses .guess .checkmark {
+            color: #00ff99;
+        }
+
+        .guesses .guess .x-mark {
+            color: #ff0066;
+        }
+
+        .celebration {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            z-index: 20;
+        }
+
+        .celebration p {
+            color: #00ff99;
+            font-size: 36px;
+        }
+
+        /* Retro animation for the win */
+        @keyframes confetti {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff0066;
+            animation: confetti 3s linear infinite;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            header {
+                font-size: 16px;
+                padding: 8px 0;
+            }
+
+            .main-content {
+                margin-top: 80px; /* Adjust for smaller header */
+                margin-bottom: 50px;
+            }
+
+            .name-box {
+                font-size: 18px;
+                padding: 15px;
+                border-width: 1px;
+                max-width: 95%;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            #score {
+                font-size: 16px;
+            }
+
+            .guesses {
+                font-size: 14px;
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Guess if Those Are Real or Fake VC Names
+    </header>
+    <div class="main-content">
+        <div class="name-box" id="nameBox">
+            Loading name...
+        </div>
+        <div>
+            <button onclick="guess(true)">Real</button>
+            <button onclick="guess(false)">Fake</button>
+        </div>
+        <div id="score">
+            Score: <span id="scoreCount">0</span>
+        </div>
+        <div class="guesses" id="guessesList">
+            <!-- List of guessed names will appear here -->
+        </div>
+    </div>
+    <footer>
+        Made by the team rocking the best travel app of the moment <a href="https://getdirecto.com" target="_blank" style="color: #00ff99; text-decoration: none;">getdirecto.com</a>
+    </footer>
+
+    <!-- Celebration modal -->
+    <div class="celebration" id="celebrationModal">
+        <p>YOU WIN!</p>
+        <div id="confettiContainer"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

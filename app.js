@@ -10,19 +10,44 @@ fetch('vc_names.csv')
     .then(data => {
         parseCSV(data);
         pickRandomVC();
+    })
+    .catch(error => {
+        console.error('Error loading CSV data:', error);
     });
 
 // Parse CSV data into a list of objects
 function parseCSV(data) {
     const lines = data.split('\n');
-    lines.forEach(line => {
-        const [name, isReal] = line.split(',');
-        vcNames.push({ name: name.trim(), isReal: isReal.trim() === 'True' });
+    lines.forEach((line, index) => {
+        // Trim whitespace from the line
+        line = line.trim();
+        // Skip empty lines
+        if (line) {
+            // Split by comma
+            const parts = line.split(',');
+            // Ensure there are exactly two parts
+            if (parts.length === 2) {
+                const name = parts[0].trim();
+                const isReal = parts[1].trim();
+                // Check if name and isReal are valid
+                if (name && (isReal === 'True' || isReal === 'False')) {
+                    vcNames.push({ name: name, isReal: isReal === 'True' });
+                } else {
+                    console.warn(`Skipping invalid line: ${line}`);
+                }
+            } else {
+                console.warn(`Skipping malformed line: ${line}`);
+            }
+        }
     });
 }
 
 // Pick a random VC name from the dataset
 function pickRandomVC() {
+    if (vcNames.length === 0) {
+        console.error('No VC names available to pick.');
+        return;
+    }
     const randomIndex = Math.floor(Math.random() * vcNames.length);
     currentVC = vcNames[randomIndex];
     document.getElementById('nameBox').innerText = currentVC.name;
@@ -30,6 +55,11 @@ function pickRandomVC() {
 
 // Handle guess
 function guess(isReal) {
+    if (!currentVC) {
+        console.error('No current VC to guess.');
+        return;
+    }
+    
     if (isReal === currentVC.isReal) {
         score++;
         document.getElementById('scoreCount').innerText = score;
